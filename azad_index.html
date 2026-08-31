@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>انتخاب رشته کارشناسی‌ارشد ۱۴۰۵</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f3d2e;
+  --navy-2:#155140;
+  --gold:#b5442e;
+  --gold-light:#d97350;
+  --bg:#f5f2ec;
+  --card:#ffffff;
+  --ink:#1c211d;
+  --muted:#6c7a70;
+  --line:#e2ded2;
+  --r-z1:#0f6b4d;
+  --r-z2:#b5442e;
+  --r-z3:#7a5a1e;
+  --r-z4:#2a5f8a;
+  --shadow: 0 1px 2px rgba(15,61,46,.07), 0 8px 24px -12px rgba(15,61,46,.20);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Vazirmatn', Tahoma, sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+}
+::selection{ background:var(--gold-light); color:#1b2230; }
+
+/* ---------- HEADER ---------- */
+header.top{
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 55%, #2a4877 100%);
+  color:#f4f1e8;
+  padding:34px 28px 30px;
+  position:relative;
+  overflow:hidden;
+}
+header.top::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 85% 20%, rgba(216,168,98,.18), transparent 45%),
+                     radial-gradient(circle at 15% 90%, rgba(216,168,98,.10), transparent 40%);
+  pointer-events:none;
+}
+.top-inner{ max-width:1400px; margin:0 auto; position:relative; }
+.eyebrow-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-mark{
+  width:44px; height:44px; border-radius:10px;
+  background: linear-gradient(160deg, var(--gold-light), var(--gold));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; color:#20304f; font-size:19px; flex:none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+}
+h1{ margin:0; font-size:22px; font-weight:700; letter-spacing:.2px; }
+.subtitle{ margin:2px 0 0; color:#c9d2e6; font-size:13.5px; }
+.stats{ display:flex; gap:10px; flex-wrap:wrap; }
+.stat-pill{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px; padding:7px 16px; font-size:13px; color:#eef1f8;
+  backdrop-filter:blur(2px);
+}
+.stat-pill b{ color:var(--gold-light); font-weight:700; }
+
+.hero-line{
+  margin-top:22px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+}
+.hero-line h2{
+  font-size:26px; margin:0; font-weight:800; line-height:1.5;
+  max-width:720px;
+}
+.hero-line span.acc{ color: var(--gold-light); }
+
+/* ---------- LAYOUT ---------- */
+.layout{
+  max-width:1400px; margin:0 auto; padding:22px 28px 60px;
+  display:grid; grid-template-columns: 1fr 380px; gap:22px; align-items:start;
+}
+@media (max-width: 1000px){
+  .layout{ grid-template-columns: 1fr; }
+}
+
+/* ---------- FILTER BAR ---------- */
+.panel{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  box-shadow:var(--shadow);
+}
+.filters{ padding:18px 20px; margin-bottom:16px; }
+.filters-grid{
+  display:grid; grid-template-columns: 1.6fr 1fr 1fr; gap:12px;
+}
+@media (max-width:700px){ .filters-grid{ grid-template-columns:1fr; } }
+.field-label{ font-size:12px; color:var(--muted); margin:0 0 6px 2px; font-weight:600; }
+input[type="text"], select{
+  width:100%; border:1px solid var(--line); background:#fbfaf7;
+  border-radius:10px; padding:10px 12px; font-family:inherit; font-size:14px; color:var(--ink);
+  transition:border-color .15s, box-shadow .15s;
+}
+input[type="text"]:focus, select:focus{
+  outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(184,134,63,.15);
+}
+.filters-foot{
+  display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:10px; flex-wrap:wrap;
+}
+.result-count{ font-size:13px; color:var(--muted); }
+.result-count b{ color:var(--navy); font-weight:700; }
+.btn-reset{
+  border:1px solid var(--line); background:#fff; color:var(--muted);
+  font-family:inherit; font-size:12.5px; padding:7px 14px; border-radius:999px; cursor:pointer;
+}
+.btn-reset:hover{ border-color:var(--gold); color:var(--gold); }
+
+/* ---------- CATALOG LIST ---------- */
+#catalog{ display:flex; flex-direction:column; gap:10px; }
+.empty-state{
+  padding:60px 20px; text-align:center; color:var(--muted); font-size:14px;
+}
+.row-card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; display:grid; grid-template-columns: 1fr auto; gap:10px 16px; align-items:center;
+  transition:box-shadow .15s, transform .15s, border-color .15s;
+}
+.row-card:hover{ box-shadow:var(--shadow); border-color:#d8cfba; }
+.row-main{ min-width:0; }
+.row-top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+.code-chip{
+  font-variant-numeric: tabular-nums;
+  font-size:12px; font-weight:700; color:var(--navy);
+  background:#eef1f7; border:1px solid #dfe4ee; border-radius:6px; padding:2px 8px;
+  letter-spacing:.3px;
+}
+.type-badge{
+  font-size:11.5px; font-weight:700; padding:2.5px 10px; border-radius:999px; color:#fff;
+}
+.cap-badge{
+  font-size:11.5px; font-weight:600; color:var(--muted); background:#f1efe8; border-radius:999px; padding:2.5px 10px;
+}
+.uni-name{ font-size:15px; font-weight:700; color:var(--ink); margin:2px 0 2px; line-height:1.5;}
+.field-name{ font-size:13.5px; color:#3d4658; margin:0 0 3px; line-height:1.55; }
+.cat-name{ font-size:12px; color:var(--gold); font-weight:600; }
+.note-text{ font-size:12px; color:var(--muted); margin-top:5px; line-height:1.6; }
+.row-action{ display:flex; align-items:center; }
+.btn-add{
+  font-family:inherit; cursor:pointer; border:none; border-radius:10px;
+  padding:9px 18px; font-size:13.5px; font-weight:700; color:#fff;
+  background: linear-gradient(160deg, var(--navy-2), var(--navy));
+  box-shadow:0 4px 10px -4px rgba(18,35,64,.5);
+  white-space:nowrap;
+  transition:transform .12s, box-shadow .12s, opacity .12s;
+}
+.btn-add:hover{ transform:translateY(-1px); box-shadow:0 8px 16px -6px rgba(18,35,64,.55); }
+.btn-add:active{ transform:translateY(0); }
+.row-card.added{ opacity:.45; }
+
+/* ---------- SELECTED SIDEBAR ---------- */
+.sidebar{ position:sticky; top:18px; }
+.sidebar-head{
+  padding:18px 20px 14px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sidebar-head h3{ margin:0; font-size:16px; font-weight:800; color:var(--navy); }
+.sidebar-head .count{
+  background:var(--gold); color:#fff; font-size:12px; font-weight:800;
+  border-radius:999px; padding:2px 10px;
+}
+#selected-list{
+  list-style:none; margin:0; padding:12px; display:flex; flex-direction:column; gap:8px;
+  max-height:calc(100vh - 260px); overflow-y:auto;
+}
+#selected-list:empty::after{ content:none; }
+.sel-empty{ padding:34px 14px; text-align:center; color:var(--muted); font-size:13px; }
+.sel-item{
+  background:#fbfaf6; border:1px solid var(--line); border-radius:12px;
+  padding:10px 10px 10px 8px; display:flex; align-items:flex-start; gap:8px;
+  cursor:grab;
+}
+.sel-item.dragging{ opacity:.4; }
+.sel-rank{
+  flex:none; width:24px; height:24px; border-radius:50%;
+  background:var(--navy); color:#fff; font-size:12px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; margin-top:1px;
+}
+.sel-body{ flex:1; min-width:0; }
+.sel-uni{ font-size:13px; font-weight:700; color:var(--ink); line-height:1.45; }
+.sel-field{ font-size:11.5px; color:var(--muted); margin-top:2px; line-height:1.5;}
+.sel-meta{ display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.sel-controls{ display:flex; flex-direction:column; gap:4px; flex:none; }
+.ctrl-btn{
+  border:none; background:#eef1f7; color:var(--navy); cursor:pointer;
+  width:24px; height:22px; border-radius:6px; font-size:12px; display:flex; align-items:center; justify-content:center;
+  transition:background .12s;
+}
+.ctrl-btn:hover{ background:#dfe4ee; }
+.ctrl-btn.remove{ background:#fbe9e9; color:var(--r-nonprofit); }
+.ctrl-btn.remove:hover{ background:#f6d3d3; }
+.ctrl-btn:disabled{ opacity:.3; cursor:not-allowed; }
+
+.sidebar-foot{
+  padding:14px 20px 18px; border-top:1px solid var(--line);
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.btn-secondary{
+  flex:1; font-family:inherit; cursor:pointer; border:1px solid var(--line); background:#fff;
+  border-radius:10px; padding:9px 10px; font-size:12.5px; font-weight:700; color:var(--navy);
+}
+.btn-secondary:hover{ border-color:var(--gold); color:var(--gold); }
+.btn-secondary.danger{ color:var(--r-nonprofit); }
+.btn-secondary.danger:hover{ border-color:var(--r-nonprofit); }
+label.btn-secondary{ display:flex; align-items:center; justify-content:center; }
+
+
+/* zarib (coefficient) colors */
+.t-ضریب-۱{ background:var(--r-z1); }
+.t-ضریب-۲{ background:var(--r-z2); }
+.t-ضریب-۳{ background:var(--r-z3); }
+.t-ضریب-۴{ background:var(--r-z4); }
+
+footer.page-foot{
+  text-align:center; color:var(--muted); font-size:12px; padding:0 20px 40px;
+}
+
+::-webkit-scrollbar{ width:8px; }
+::-webkit-scrollbar-thumb{ background:#d8cfba; border-radius:8px; }
+
+@media print{
+  header.top, .filters, .row-action, .sidebar-foot, .btn-reset{ display:none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="eyebrow-row">
+      <div class="brand">
+        <div class="brand-mark">۱۴۰۵</div>
+        <div>
+          <h1>راهنمای انتخاب رشته کارشناسی‌ارشد دانشگاه آزاد اسلامی</h1>
+          <p class="subtitle">فناوری اطلاعات · علم کامپیوتر — سال ۱۴۰۵</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-pill"><b id="stat-total">0</b> کد رشته/محل</div>
+        <div class="stat-pill"><b id="stat-uni">0</b> واحد و مرکز آموزشی</div>
+        <div class="stat-pill"><b id="stat-selected">0</b> در لیست شما</div>
+      </div>
+    </div>
+    <div class="hero-line">
+      <h2>رشته‌های دانشگاه آزاد اسلامی را جست‌وجو کن، به <span class="acc">لیست انتخابی</span> اضافه کن، و ترتیب اولویتت را بچین.</h2>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <main>
+    <div class="panel filters">
+      <div class="filters-grid">
+        <div>
+          <p class="field-label">جست‌وجو در واحد، رشته، گرایش یا کد</p>
+          <input type="text" id="search" placeholder="مثلاً: هوش مصنوعی، تهران مرکزی، 41078 ...">
+        </div>
+        <div>
+          <p class="field-label">گروه رشته</p>
+          <select id="filter-cat"><option value="">همه گروه‌ها</option></select>
+        </div>
+        <div>
+          <p class="field-label">ضریب</p>
+          <select id="filter-type"><option value="">همه ضرایب</option></select>
+        </div>
+      </div>
+      <div class="filters-foot">
+        <div class="result-count"><b id="result-count">0</b> نتیجه از <span id="result-total">0</span> ردیف</div>
+        <button class="btn-reset" id="reset-filters">پاک‌کردن فیلترها</button>
+      </div>
+    </div>
+
+    <div id="catalog"></div>
+  </main>
+
+  <aside class="panel sidebar">
+    <div class="sidebar-head">
+      <h3>لیست انتخابی من</h3>
+      <span class="count" id="sidebar-count">0</span>
+    </div>
+    <ul id="selected-list"></ul>
+    <div class="sidebar-foot">
+      <button class="btn-secondary" id="btn-copy">کپی لیست</button>
+      <button class="btn-secondary" id="btn-download">دانلود متن</button>
+      <button class="btn-secondary" id="btn-excel-export">خروجی اکسل</button>
+      <label class="btn-secondary" id="btn-excel-import-label" for="excel-upload">
+        ورودی از اکسل
+      </label>
+      <input type="file" id="excel-upload" accept=".xlsx,.xls" style="display:none;">
+      <button class="btn-secondary danger" id="btn-clear">پاک‌کردن همه</button>
+    </div>
+  </aside>
+</div>
+
+<footer class="page-foot">این ابزار صرفاً یک دستیار مرتب‌سازی محلی است؛ داده‌ها مربوط به کدرشته‌محل‌های دانشگاه آزاد اسلامی از دفترچه انتخاب رشته کارشناسی‌ارشد ۱۴۰۵ استخراج شده‌اند (رشته نانوفناوری-نانومواد حذف شده است). لیست شما فقط در همین مرورگر ذخیره می‌شود.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const DATA = [{"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41009-179", "uni": "واحد میبد", "field": "مهندسی فناوري اطلاعات", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-103", "uni": "واحد ارومیه", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-175", "uni": "واحد اصفهان ( خوراسگان )", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-503", "uni": "واحد الکترونیکی", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "40", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-223", "uni": "واحد بافق", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-131", "uni": "واحد بیرجند", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-247", "uni": "واحد تفرش", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-141", "uni": "واحد تهران جنوب", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-101", "uni": "واحد تهران مرکزي", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-193", "uni": "واحد جهرم", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-262", "uni": "واحد خمین", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-163", "uni": "واحد شیراز", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-387", "uni": "واحد صفاشهر", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-123", "uni": "واحد علوم و تحقیقات", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-134", "uni": "واحد فسا", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-395", "uni": "واحد فومن و شفت", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-214", "uni": "واحد قزوین", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-116", "uni": "واحد کاشان", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-202", "uni": "واحد لاهیجان", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-179", "uni": "واحد میبد", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-139", "uni": "واحد یادگار امام خمینی (ره) شهرري", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41024-120", "uni": "واحد یاسوج", "field": "مهندسی فناوري اطلاعات - تجارت الکترونیکی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-103", "uni": "واحد ارومیه", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-226", "uni": "واحد بردسیر", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-228", "uni": "واحد تهران غرب", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-195", "uni": "واحد شبستر", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-108", "uni": "واحد کرمان", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-190", "uni": "واحد مبارکه", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41041-150", "uni": "واحد نجف آباد", "field": "مهندسی فناوري اطلاعات - معماري سازمانی", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41085-199", "uni": "واحد آشتیان", "field": "مهندسی فناوري اطلاعات - تحول دیجیتال", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۱)", "id": "41085-137", "uni": "واحد خوي", "field": "مهندسی فناوري اطلاعات - تحول دیجیتال", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۲)", "id": "80143-103", "uni": "واحد ارومیه", "field": "مهندسی پزشکی - مهندسی اطلاعات پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۲)", "id": "80143-106", "uni": "واحد اهواز", "field": "مهندسی پزشکی - مهندسی اطلاعات پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۲)", "id": "80143-138", "uni": "واحد زنجان", "field": "مهندسی پزشکی - مهندسی اطلاعات پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۲)", "id": "80143-127", "uni": "واحد سبزوار", "field": "مهندسی پزشکی - مهندسی اطلاعات پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی فناوري اطلاعات (ضریب ۲)", "id": "80143-154", "uni": "واحد قم", "field": "مهندسی پزشکی - مهندسی اطلاعات پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41072-501", "uni": "واحد پردیس", "field": "جرم یابی دیجیتال", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41072-252", "uni": "واحد شهر قدس", "field": "جرم یابی دیجیتال", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-199", "uni": "واحد آشتیان", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-121", "uni": "واحد اراك", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-156", "uni": "واحد بابل", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-226", "uni": "واحد بردسیر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-240", "uni": "واحد بم", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-146", "uni": "واحد بوشهر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-298", "uni": "واحد پرند", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-102", "uni": "واحد تبریز", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-118", "uni": "واحد تربت جام", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-141", "uni": "واحد تهران جنوب", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-157", "uni": "واحد تهران شمال", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-101", "uni": "واحد تهران مرکزي", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-262", "uni": "واحد خمین", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-165", "uni": "واحد دزفول", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-318", "uni": "واحد دولت آباد", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-194", "uni": "واحد رفسنجان", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-138", "uni": "واحد زنجان", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-195", "uni": "واحد شبستر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-387", "uni": "واحد صفاشهر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-123", "uni": "واحد علوم و تحقیقات", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-184", "uni": "واحد علی آباد کتول", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-162", "uni": "واحد فردوس", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-107", "uni": "واحد قائم شهر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-214", "uni": "واحد قزوین", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-212", "uni": "واحد کاشمر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-108", "uni": "واحد کرمان", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-189", "uni": "واحد گرمسار", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-202", "uni": "واحد لاهیجان", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-196", "uni": "واحد ملایر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-479", "uni": "واحد مهدي شهر", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-143", "uni": "واحد ورامین", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41076-171", "uni": "واحد همدان", "field": "مهندسی و علم کامپیوتر - شبکه هاي کامپیوتري", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۱)", "id": "41077-206", "uni": "واحد قوچان", "field": "مهندسی و علم کامپیوتر - اینترنت اشیاء", "type": "ضریب ۱", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-103", "uni": "واحد ارومیه", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-175", "uni": "واحد اصفهان ( خوراسگان )", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-161", "uni": "واحد اقلید", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-503", "uni": "واحد الکترونیکی", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "40", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-273", "uni": "واحد انار", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-156", "uni": "واحد بابل", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-242", "uni": "واحد بروجن", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-144", "uni": "واحد بناب", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-299", "uni": "واحد بوئین زهرا", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-131", "uni": "واحد بیرجند", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-141", "uni": "واحد تهران جنوب", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-157", "uni": "واحد تهران شمال", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-101", "uni": "واحد تهران مرکزي", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-929", "uni": "واحد تهران مرکزي- محل تشکیل کلاس مرکز بین المللی کیش", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-188", "uni": "واحد خمینی شهر", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-165", "uni": "واحد دزفول", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-194", "uni": "واحد رفسنجان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-127", "uni": "واحد سبزوار", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-128", "uni": "واحد سمنان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-203", "uni": "واحد سیرجان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-252", "uni": "واحد شهر قدس", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-133", "uni": "واحد شهرکرد", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-163", "uni": "واحد شیراز", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-583", "uni": "واحد صفادشت", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-123", "uni": "واحد علوم و تحقیقات", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-162", "uni": "واحد فردوس", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-214", "uni": "واحد قزوین", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-206", "uni": "واحد قوچان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-152", "uni": "واحد کازرون", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-115", "uni": "واحد کرج", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-108", "uni": "واحد کرمان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-202", "uni": "واحد لاهیجان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-111", "uni": "واحد مشهد", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-560", "uni": "واحد ملارد", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-179", "uni": "واحد میبد", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-150", "uni": "واحد نجف آباد", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-239", "uni": "واحد نور", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-292", "uni": "واحد نورآباد ممسنی", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-171", "uni": "واحد همدان", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41078-105", "uni": "واحد یزد", "field": "مهندسی و علم کامپیوتر - هوش مصنوعی", "type": "ضریب ۲", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41082-152", "uni": "واحد کازرون", "field": "مهندسی هوش مصنوعی در پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "41082-111", "uni": "واحد مشهد", "field": "مهندسی هوش مصنوعی در پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "80147-152", "uni": "واحد کازرون", "field": "مهندسی هوش مصنوعی در پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۲)", "id": "80147-111", "uni": "واحد مشهد", "field": "مهندسی هوش مصنوعی در پزشکی", "type": "ضریب ۲", "cap": "10", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-199", "uni": "واحد آشتیان", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-820", "uni": "واحد آکسفورد", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-121", "uni": "واحد اراك", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-503", "uni": "واحد الکترونیکی", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "40", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-187", "uni": "واحد امیدیه", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-220", "uni": "واحد اهر", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-254", "uni": "واحد ایلام", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-221", "uni": "واحد بافت", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-298", "uni": "واحد پرند", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-102", "uni": "واحد تبریز", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-141", "uni": "واحد تهران جنوب", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-157", "uni": "واحد تهران شمال", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-228", "uni": "واحد تهران غرب", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-101", "uni": "واحد تهران مرکزي", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-290", "uni": "واحد دشتستان", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-194", "uni": "واحد رفسنجان", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-113", "uni": "واحد رودهن", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-181", "uni": "واحد ساوه", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-203", "uni": "واحد سیرجان", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-195", "uni": "واحد شبستر", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-252", "uni": "واحد شهر قدس", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-123", "uni": "واحد علوم و تحقیقات", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-162", "uni": "واحد فردوس", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-214", "uni": "واحد قزوین", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-108", "uni": "واحد کرمان", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-140", "uni": "واحد گناباد", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-150", "uni": "واحد نجف آباد", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-139", "uni": "واحد یادگار امام خمینی (ره) شهرري", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۳)", "id": "41079-105", "uni": "واحد یزد", "field": "مهندسی و علم کامپیوتر - معماري سیستم هاي کامپیوتري", "type": "ضریب ۳", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-399", "uni": "واحد آذرشهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-186", "uni": "واحد آزاد شهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-199", "uni": "واحد آشتیان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-597", "uni": "مرکز آموزش بین المللی قشم", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-260", "uni": "واحد آیت اله آملی", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-207", "uni": "واحد ابهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-121", "uni": "واحد اراك", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-119", "uni": "واحد اردبیل", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-160", "uni": "واحد ارسنجان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-103", "uni": "واحد ارومیه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-145", "uni": "واحد استهبان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-238", "uni": "واحد اسلامشهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-175", "uni": "واحد اصفهان ( خوراسگان )", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-503", "uni": "واحد الکترونیکی", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "40", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-222", "uni": "واحد امارات متحده عربی", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-187", "uni": "واحد امیدیه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-106", "uni": "واحد اهواز", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-156", "uni": "واحد بابل", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-221", "uni": "واحد بافت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-226", "uni": "واحد بردسیر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-112", "uni": "واحد بروجرد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-144", "uni": "واحد بناب", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-114", "uni": "واحد بندرعباس", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-146", "uni": "واحد بوشهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-299", "uni": "واحد بوئین زهرا", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-215", "uni": "واحد بهبهان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-346", "uni": "واحد بهشهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-131", "uni": "واحد بیرجند", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-291", "uni": "واحد بیضا", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-926", "uni": "واحد بین المللی اروند", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-916", "uni": "مرکز بین المللی کیش", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-501", "uni": "واحد پردیس", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-298", "uni": "واحد پرند", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-102", "uni": "واحد تبریز", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-132", "uni": "واحد تربت حیدریه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-247", "uni": "واحد تفرش", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-924", "uni": "واحد تنگستان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-167", "uni": "واحد تویسرکان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-141", "uni": "واحد تهران جنوب", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-157", "uni": "واحد تهران شمال", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-228", "uni": "واحد تهران غرب", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-101", "uni": "واحد تهران مرکزي", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-122", "uni": "واحد جیرفت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-148", "uni": "واحد خرم آباد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-262", "uni": "واحد خمین", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-137", "uni": "واحد خوي", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-168", "uni": "واحد داراب", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-142", "uni": "واحد دامغان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-165", "uni": "واحد دزفول", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-250", "uni": "واحد دماوند", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-248", "uni": "واحد دورود", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-318", "uni": "واحد دولت آباد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-183", "uni": "واحد دهاقان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-293", "uni": "واحد دهدشت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-414", "uni": "واحد رامسر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-117", "uni": "واحد رشت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-343", "uni": "واحد زاهد شهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-109", "uni": "واحد زاهدان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-288", "uni": "واحد زرقان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-138", "uni": "واحد زنجان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-208", "uni": "واحد ساري", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-181", "uni": "واحد ساوه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-127", "uni": "واحد سبزوار", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-251", "uni": "واحد سپیدان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-128", "uni": "واحد سمنان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-110", "uni": "واحد سنندج", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-203", "uni": "واحد سیرجان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-104", "uni": "واحد شاهرود", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-195", "uni": "واحد شبستر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-204", "uni": "واحد شوشتر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-252", "uni": "واحد شهر قدس", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-133", "uni": "واحد شهرکرد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-163", "uni": "واحد شیراز", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-169", "uni": "واحد شیروان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-583", "uni": "واحد صفادشت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-123", "uni": "واحد علوم و تحقیقات", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-184", "uni": "واحد علی آباد کتول", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-401", "uni": "مرکز فارسان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-162", "uni": "واحد فردوس", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-395", "uni": "واحد فومن و شفت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-129", "uni": "واحد فیروز آباد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-107", "uni": "واحد قائم شهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-214", "uni": "واحد قزوین", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-154", "uni": "واحد قم", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-116", "uni": "واحد کاشان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-115", "uni": "واحد کرج", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-108", "uni": "واحد کرمان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-173", "uni": "واحد گرگان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-391", "uni": "واحد گرمی", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-155", "uni": "واحد لارستان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-243", "uni": "واحد لامرد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-202", "uni": "واحد لاهیجان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-231", "uni": "واحد لبنان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-241", "uni": "واحد ماکو", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-191", "uni": "واحد ماهشهر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-190", "uni": "واحد مبارکه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-200", "uni": "واحد محلات", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-147", "uni": "واحد مراغه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-198", "uni": "واحد مرودشت", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-537", "uni": "واحد مریوان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-111", "uni": "واحد مشهد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-560", "uni": "واحد ملارد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-196", "uni": "واحد ملایر", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-166", "uni": "واحد مهاباد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-249", "uni": "واحد میاندوآب", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-218", "uni": "واحد میانه", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-179", "uni": "واحد میبد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-150", "uni": "واحد نجف آباد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-185", "uni": "واحد نراق", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-239", "uni": "واحد نور", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-130", "uni": "واحد نیشابور", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-143", "uni": "واحد ورامین", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-171", "uni": "واحد همدان", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-400", "uni": "واحد هیدج", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-139", "uni": "واحد یادگار امام خمینی (ره) شهرري", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-120", "uni": "واحد یاسوج", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41080-105", "uni": "واحد یزد", "field": "مهندسی و علم کامپیوتر - نرم افزار", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41081-103", "uni": "واحد ارومیه", "field": "بازي هاي رایانه اي", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41081-162", "uni": "واحد فردوس", "field": "بازي هاي رایانه اي", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41081-129", "uni": "واحد فیروز آباد", "field": "بازي هاي رایانه اي", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41081-115", "uni": "واحد کرج", "field": "بازي هاي رایانه اي", "type": "ضریب ۴", "cap": "20", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "41086-171", "uni": "واحد همدان", "field": "مهندسی و علم کامپیوتر - علم داده", "type": "ضریب ۴", "cap": "10", "note": ""}, {"cat": "مهندسی و علم کامپیوتر (ضریب ۴)", "id": "80146-208", "uni": "واحد ساري", "field": "علم داده ها", "type": "ضریب ۴", "cap": "5", "note": ""}];
+
+const TYPE_CLASS = {
+  "ضریب ۱":"t-ضریب-۱","ضریب ۲":"t-ضریب-۲","ضریب ۳":"t-ضریب-۳","ضریب ۴":"t-ضریب-۴"
+};
+
+const STORE_KEY = "gradguide_azad_selected_v1";
+let selected = [];
+try{ selected = JSON.parse(localStorage.getItem(STORE_KEY)) || []; }catch(e){ selected = []; }
+let selectedIds = new Set(selected.map(x=>x.id));
+
+const state = { search:"", cat:"", type:"" };
+
+function saveSelected(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(selected)); }catch(e){ /* storage unavailable, ignore */ }
+}
+
+function populateFilters(){
+  const catSel = document.getElementById('filter-cat');
+  const typeSel = document.getElementById('filter-type');
+  const cats = [...new Set(DATA.map(d=>d.cat))];
+  cats.forEach(c=>{
+    const o=document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o);
+  });
+  const types = [...new Set(DATA.map(d=>d.type))];
+  types.forEach(t=>{
+    const o=document.createElement('option'); o.value=t; o.textContent=t; typeSel.appendChild(o);
+  });
+}
+
+function matches(row){
+  if(selectedIds.has(row.id)) return false;
+  if(state.cat && row.cat !== state.cat) return false;
+  if(state.type && row.type !== state.type) return false;
+  if(state.search){
+    const s = state.search.toLowerCase();
+    const hay = (row.id+" "+row.uni+" "+row.field+" "+row.note+" "+row.cat).toLowerCase();
+    if(!hay.includes(s)) return false;
+  }
+  return true;
+}
+
+function typeClass(t){ return TYPE_CLASS[t] || "t-ضریب-۱"; }
+
+function renderCatalog(){
+  const root = document.getElementById('catalog');
+  const filtered = DATA.filter(matches);
+  document.getElementById('result-count').textContent = filtered.length.toLocaleString('fa-IR');
+  document.getElementById('result-total').textContent = DATA.length.toLocaleString('fa-IR');
+
+  if(filtered.length === 0){
+    root.innerHTML = '<div class="panel empty-state">نتیجه‌ای برای این جست‌وجو یافت نشد.</div>';
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  filtered.forEach(row=>{
+    const card = document.createElement('div');
+    card.className = 'row-card';
+    card.innerHTML = `
+      <div class="row-main">
+        <div class="row-top">
+          <span class="code-chip">${row.id}</span>
+          <span class="type-badge ${typeClass(row.type)}">${row.type}</span>
+          <span class="cap-badge">ظرفیت ${row.cap}</span>
+        </div>
+        <div class="uni-name">${row.uni}</div>
+        <div class="field-name">${row.field}</div>
+        <div class="cat-name">${row.cat}</div>
+        ${row.note ? `<div class="note-text">${row.note}</div>` : ``}
+      </div>
+      <div class="row-action">
+        <button class="btn-add" data-id="${row.id}">افزودن +</button>
+      </div>`;
+    frag.appendChild(card);
+  });
+  root.innerHTML = '';
+  root.appendChild(frag);
+
+  root.querySelectorAll('.btn-add').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-id');
+      addToSelected(id);
+    });
+  });
+}
+
+function addToSelected(id){
+  if(selectedIds.has(id)) return;
+  const row = DATA.find(d=>d.id===id);
+  if(!row) return;
+  selected.push(row);
+  selectedIds.add(id);
+  saveSelected();
+  renderCatalog();
+  renderSelected();
+  updateStats();
+}
+
+function removeFromSelected(id){
+  selected = selected.filter(r=>r.id!==id);
+  selectedIds.delete(id);
+  saveSelected();
+  renderCatalog();
+  renderSelected();
+  updateStats();
+}
+
+function moveSelected(id, dir){
+  const idx = selected.findIndex(r=>r.id===id);
+  if(idx<0) return;
+  const newIdx = idx+dir;
+  if(newIdx<0 || newIdx>=selected.length) return;
+  const tmp = selected[idx];
+  selected[idx] = selected[newIdx];
+  selected[newIdx] = tmp;
+  saveSelected();
+  renderSelected();
+}
+
+let dragSrcId = null;
+
+function renderSelected(){
+  const ul = document.getElementById('selected-list');
+  document.getElementById('sidebar-count').textContent = selected.length;
+  document.getElementById('stat-selected').textContent = selected.length.toLocaleString('fa-IR');
+
+  if(selected.length===0){
+    ul.innerHTML = '<div class="sel-empty">هنوز رشته‌ای اضافه نکرده‌اید.<br>از لیست سمت راست دکمه «افزودن» را بزنید.</div>';
+    return;
+  }
+
+  ul.innerHTML = '';
+  selected.forEach((row, i)=>{
+    const li = document.createElement('li');
+    li.className = 'sel-item';
+    li.draggable = true;
+    li.dataset.id = row.id;
+    li.innerHTML = `
+      <div class="sel-rank">${i+1}</div>
+      <div class="sel-body">
+        <div class="sel-uni">${row.uni}</div>
+        <div class="sel-field">${row.field}</div>
+        <div class="sel-meta">
+          <span class="type-badge ${typeClass(row.type)}" style="font-size:10.5px;padding:2px 8px;">${row.type}</span>
+          <span class="cap-badge" style="font-size:10.5px;">کد ${row.id}</span>
+        </div>
+      </div>
+      <div class="sel-controls">
+        <button class="ctrl-btn up" title="بالا" ${i===0?'disabled':''}>▲</button>
+        <button class="ctrl-btn down" title="پایین" ${i===selected.length-1?'disabled':''}>▼</button>
+        <button class="ctrl-btn remove" title="حذف">✕</button>
+      </div>`;
+    ul.appendChild(li);
+
+    li.querySelector('.up').addEventListener('click', ()=>moveSelected(row.id,-1));
+    li.querySelector('.down').addEventListener('click', ()=>moveSelected(row.id,1));
+    li.querySelector('.remove').addEventListener('click', ()=>removeFromSelected(row.id));
+
+    li.addEventListener('dragstart', ()=>{ dragSrcId = row.id; li.classList.add('dragging'); });
+    li.addEventListener('dragend', ()=>{ li.classList.remove('dragging'); dragSrcId=null; });
+    li.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+    li.addEventListener('drop', (e)=>{
+      e.preventDefault();
+      if(!dragSrcId || dragSrcId===row.id) return;
+      const fromIdx = selected.findIndex(r=>r.id===dragSrcId);
+      const toIdx = selected.findIndex(r=>r.id===row.id);
+      if(fromIdx<0||toIdx<0) return;
+      const [moved] = selected.splice(fromIdx,1);
+      selected.splice(toIdx,0,moved);
+      saveSelected();
+      renderSelected();
+    });
+  });
+}
+
+function updateStats(){
+  document.getElementById('stat-total').textContent = DATA.length.toLocaleString('fa-IR');
+  const unis = new Set(DATA.map(d=>d.uni));
+  document.getElementById('stat-uni').textContent = unis.size.toLocaleString('fa-IR');
+}
+
+function buildListText(){
+  if(selected.length===0) return "لیست انتخابی خالی است.";
+  let out = "لیست انتخابی رشته - کارشناسی‌ارشد دانشگاه آزاد ۱۴۰۵\n";
+  out += "====================================\n\n";
+  selected.forEach((r,i)=>{
+    out += `${i+1}) کد ${r.id} - ${r.uni}\n   ${r.field} (${r.type}) - ظرفیت ${r.cap}${r.note? " - "+r.note:""}\n\n`;
+  });
+  return out;
+}
+
+document.getElementById('search').addEventListener('input', (e)=>{
+  state.search = e.target.value.trim();
+  renderCatalog();
+});
+document.getElementById('filter-cat').addEventListener('change', (e)=>{
+  state.cat = e.target.value; renderCatalog();
+});
+document.getElementById('filter-type').addEventListener('change', (e)=>{
+  state.type = e.target.value; renderCatalog();
+});
+document.getElementById('reset-filters').addEventListener('click', ()=>{
+  state.search=""; state.cat=""; state.type="";
+  document.getElementById('search').value="";
+  document.getElementById('filter-cat').value="";
+  document.getElementById('filter-type').value="";
+  renderCatalog();
+});
+document.getElementById('btn-clear').addEventListener('click', ()=>{
+  if(selected.length===0) return;
+  if(!confirm('همه رشته‌های انتخابی حذف شوند؟')) return;
+  selected = []; selectedIds.clear(); saveSelected();
+  renderCatalog(); renderSelected(); updateStats();
+});
+document.getElementById('btn-copy').addEventListener('click', ()=>{
+  const text = buildListText();
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = document.getElementById('btn-copy');
+    const old = btn.textContent; btn.textContent = "کپی شد ✓";
+    setTimeout(()=>btn.textContent=old, 1400);
+  });
+});
+document.getElementById('btn-download').addEventListener('click', ()=>{
+  const text = buildListText();
+  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'لیست-انتخاب-رشته-1405.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+function init(){
+  try{
+    populateFilters();
+    updateStats();
+    renderCatalog();
+    renderSelected();
+  }catch(err){
+    document.getElementById('catalog').innerHTML =
+      '<div class="panel empty-state" style="color:#a13e3e;">خطایی رخ داد: '+ (err && err.message ? err.message : err) +'</div>';
+    console.error(err);
+  }
+}
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+
+// ---------- EXCEL EXPORT / IMPORT ----------
+function buildExcelRows(){
+  return selected.map((r, i) => ({
+    "ردیف": i + 1,
+    "کد": r.id,
+    "دانشگاه / محل تحصیل": r.uni,
+    "رشته - گرایش": r.field,
+    "گروه رشته": r.cat,
+    "نوع دوره": r.type,
+    "ظرفیت": r.cap,
+    "توضیحات": r.note || ""
+  }));
+}
+
+document.getElementById('btn-excel-export').addEventListener('click', () => {
+  if (selected.length === 0) { alert('لیست انتخابی خالی است.'); return; }
+  if (typeof XLSX === 'undefined') { alert('کتابخانه اکسل بارگذاری نشد. اتصال اینترنت را بررسی کنید.'); return; }
+  const rows = buildExcelRows();
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [
+    { wch: 6 }, { wch: 14 }, { wch: 42 }, { wch: 42 },
+    { wch: 26 }, { wch: 16 }, { wch: 8 }, { wch: 40 }
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'لیست انتخابی');
+  XLSX.writeFile(wb, 'لیست-انتخاب-رشته-1405.xlsx');
+});
+
+document.getElementById('excel-upload').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (typeof XLSX === 'undefined') { alert('کتابخانه اکسل بارگذاری نشد. اتصال اینترنت را بررسی کنید.'); e.target.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try {
+      const wb = XLSX.read(evt.target.result, { type: 'array' });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      let added = 0, notFound = 0, duplicate = 0;
+      rows.forEach(row => {
+        const rawCode = row['کد'] ?? row['کد رشته محل'] ?? row['Code'] ?? row['code'] ?? '';
+        const code = String(rawCode).trim();
+        if (!code) return;
+        if (selectedIds.has(code)) { duplicate++; return; }
+        const match = DATA.find(d => d.id === code);
+        if (match) {
+          selected.push(match);
+          selectedIds.add(code);
+          added++;
+        } else {
+          notFound++;
+        }
+      });
+      saveSelected();
+      renderCatalog();
+      renderSelected();
+      updateStats();
+      let msg = `${added} ردیف از اکسل به لیست اضافه شد.`;
+      if (duplicate) msg += `\n${duplicate} مورد از قبل در لیست بود.`;
+      if (notFound) msg += `\n${notFound} کد در این دیتاست پیدا نشد (شاید مربوط به نسخهٔ دیگر فایل باشد).`;
+      alert(msg);
+    } catch (err) {
+      alert('خطا در خواندن فایل اکسل: ' + (err && err.message ? err.message : err));
+    }
+    e.target.value = '';
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+</script>
+</body>
+</html>
