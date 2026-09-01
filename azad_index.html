@@ -78,27 +78,43 @@ h1{ margin:0; font-size:22px; font-weight:700; letter-spacing:.2px; }
 }
 .hero-line span.acc{ color: var(--gold-light); }
 
-.nav-jump-row{ margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
-.nav-jump-btn{
-  font-family:inherit; cursor:pointer; border:1px solid transparent; border-radius:999px;
-  padding:10px 20px; font-size:13px; font-weight:700; color:#1a2440;
-  background: linear-gradient(160deg, var(--gold-light), var(--gold));
-  transition:transform .12s, box-shadow .12s; white-space:nowrap;
+/* ---------- STICKY MINI HEADER ---------- */
+.stickybar{
+  position: sticky; top:0; z-index:300;
+  background: var(--card); border-bottom:1px solid var(--line);
+  padding:10px 12px; box-shadow: var(--shadow);
+  display:flex; align-items:center; gap:8px;
 }
-.nav-jump-btn:hover{ transform:translateY(-1px); }
-.nav-jump-btn--outline{
-  background:transparent; color:#fff; border-color:rgba(255,255,255,.4);
+.stickybar-actions{
+  display:flex; gap:8px; align-items:center; width:100%;
 }
-@media print{ .nav-jump-row{ display:none !important; } }
+.stickybar-btn{
+  font-family:inherit; cursor:pointer; border:1px solid var(--line); border-radius:8px;
+  padding:9px 6px; font-size:12px; font-weight:700; color:var(--navy); background:#fff;
+  transition:transform .12s, border-color .12s, color .12s, background .12s;
+  text-decoration:none; display:flex; align-items:center; justify-content:center; gap:4px;
+  flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.stickybar-btn:hover{ border-color:var(--gold); color:var(--gold); }
+.stickybar-btn.primary{
+  border:1px solid transparent; color:#fff;
+  background:linear-gradient(160deg, var(--gold-light), var(--gold));
+}
+.stickybar-btn.primary:hover{ color:#fff; filter:brightness(1.06); }
+.stickybar-btn.link{ border-color:var(--navy-2); color:var(--navy-2); }
+.stickybar-btn.link:hover{ border-color:var(--navy-2); color:var(--navy-2); background:#eef1f7; }
+@media (max-width:420px){
+  .stickybar{ padding:8px 8px; gap:6px; }
+  .stickybar-btn{ padding:8px 4px; font-size:11px; gap:3px; }
+}
+@media print{ .stickybar{ display:none !important; } }
 
-/* ---------- LAYOUT ---------- */
+/* ---------- LAYOUT (tabbed) ---------- */
 .layout{
-  max-width:1400px; margin:0 auto; padding:22px 28px 60px;
-  display:grid; grid-template-columns: 1fr 380px; gap:22px; align-items:start;
+  max-width:1000px; margin:0 auto; padding:22px 20px 60px;
 }
-@media (max-width: 1000px){
-  .layout{ grid-template-columns: 1fr; }
-}
+.tab-panel{ display:none; }
+.tab-panel.active{ display:block; }
 
 /* ---------- FILTER BAR ---------- */
 .panel{
@@ -172,8 +188,8 @@ input[type="text"]:focus, select:focus{
 .btn-add:active{ transform:translateY(0); }
 .row-card.added{ opacity:.45; }
 
-/* ---------- SELECTED SIDEBAR ---------- */
-.sidebar{ position:sticky; top:18px; }
+/* ---------- SELECTED PANEL ---------- */
+.sidebar{ position:static; }
 .sidebar-head{
   padding:18px 20px 14px; border-bottom:1px solid var(--line);
   display:flex; align-items:center; justify-content:space-between;
@@ -185,16 +201,22 @@ input[type="text"]:focus, select:focus{
 }
 #selected-list{
   list-style:none; margin:0; padding:12px; display:flex; flex-direction:column; gap:8px;
-  max-height:calc(100vh - 260px); overflow-y:auto;
 }
 #selected-list:empty::after{ content:none; }
 .sel-empty{ padding:34px 14px; text-align:center; color:var(--muted); font-size:13px; }
 .sel-item{
   background:#fbfaf6; border:1px solid var(--line); border-radius:12px;
-  padding:10px 10px 10px 8px; display:flex; align-items:flex-start; gap:8px;
-  cursor:grab;
+  padding:10px 10px 10px 8px; display:flex; align-items:flex-start; gap:6px;
+  position:relative; touch-action:pan-y; user-select:none; -webkit-user-select:none;
 }
-.sel-item.dragging{ opacity:.4; }
+.sel-item.dragging{
+  opacity:.85; box-shadow:0 10px 26px -8px rgba(18,35,64,.4); z-index:20; background:#fff;
+}
+.drag-handle{
+  flex:none; width:18px; align-self:stretch; display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:15px; cursor:grab; letter-spacing:-2px;
+}
+.sel-item.dragging .drag-handle{ cursor:grabbing; color:var(--gold); }
 .sel-rank{
   flex:none; width:24px; height:24px; border-radius:50%;
   background:var(--navy); color:#fff; font-size:12px; font-weight:800;
@@ -249,6 +271,14 @@ footer.page-foot{
 </head>
 <body>
 
+<nav class="stickybar" id="stickybar">
+<div class="stickybar-actions">
+    <button class="stickybar-btn" id="tab-btn-selected" type="button">📋 لیست من</button>
+    <button class="stickybar-btn primary" id="tab-btn-add" type="button">➕ افزودن</button>
+    <a class="stickybar-btn link" href="https://mohmmadjavad.github.io/konkur-arshad-computer-1405/" target="_blank" rel="noopener">🎓 رشته روزانه</a>
+  </div>
+</nav>
+
 <header class="top">
   <div class="top-inner">
     <div class="eyebrow-row">
@@ -268,15 +298,11 @@ footer.page-foot{
     <div class="hero-line">
       <h2>رشته‌های دانشگاه آزاد اسلامی را جست‌وجو کن، به <span class="acc">لیست انتخابی</span> اضافه کن، و ترتیب اولویتت را بچین.</h2>
     </div>
-    <div class="nav-jump-row">
-      <button class="nav-jump-btn" id="jump-selected" type="button">📋 رشته‌های انتخابی من</button>
-      <button class="nav-jump-btn nav-jump-btn--outline" id="jump-add" type="button">➕ افزودن رشته</button>
-    </div>
   </div>
 </header>
 
 <div class="layout">
-  <main>
+  <main id="tab-add" class="tab-panel active">
     <div class="panel filters" id="addSection">
       <div class="filters-grid">
         <div>
@@ -301,7 +327,7 @@ footer.page-foot{
     <div id="catalog"></div>
   </main>
 
-  <aside class="panel sidebar" id="mySidebar">
+  <aside class="panel sidebar tab-panel" id="mySidebar">
     <div class="sidebar-head">
       <h3>لیست انتخابی من</h3>
       <span class="count" id="sidebar-count">0</span>
@@ -444,15 +470,13 @@ function moveSelected(id, dir){
   renderSelected();
 }
 
-let dragSrcId = null;
-
 function renderSelected(){
   const ul = document.getElementById('selected-list');
   document.getElementById('sidebar-count').textContent = selected.length;
   document.getElementById('stat-selected').textContent = selected.length.toLocaleString('fa-IR');
 
   if(selected.length===0){
-    ul.innerHTML = '<div class="sel-empty">هنوز رشته‌ای اضافه نکرده‌اید.<br>از لیست سمت راست دکمه «افزودن» را بزنید.</div>';
+    ul.innerHTML = '<div class="sel-empty">هنوز رشته‌ای اضافه نکرده‌اید.<br>از تب «افزودن رشته» شروع کنید.</div>';
     return;
   }
 
@@ -460,9 +484,9 @@ function renderSelected(){
   selected.forEach((row, i)=>{
     const li = document.createElement('li');
     li.className = 'sel-item';
-    li.draggable = true;
     li.dataset.id = row.id;
     li.innerHTML = `
+      <div class="drag-handle" title="جابه‌جایی">⠿</div>
       <div class="sel-rank">${i+1}</div>
       <div class="sel-body">
         <div class="sel-uni">${row.uni}</div>
@@ -483,21 +507,72 @@ function renderSelected(){
     li.querySelector('.down').addEventListener('click', ()=>moveSelected(row.id,1));
     li.querySelector('.remove').addEventListener('click', ()=>removeFromSelected(row.id));
 
-    li.addEventListener('dragstart', ()=>{ dragSrcId = row.id; li.classList.add('dragging'); });
-    li.addEventListener('dragend', ()=>{ li.classList.remove('dragging'); dragSrcId=null; });
-    li.addEventListener('dragover', (e)=>{ e.preventDefault(); });
-    li.addEventListener('drop', (e)=>{
-      e.preventDefault();
-      if(!dragSrcId || dragSrcId===row.id) return;
-      const fromIdx = selected.findIndex(r=>r.id===dragSrcId);
-      const toIdx = selected.findIndex(r=>r.id===row.id);
-      if(fromIdx<0||toIdx<0) return;
-      const [moved] = selected.splice(fromIdx,1);
-      selected.splice(toIdx,0,moved);
+    enableRowDrag(li, ul);
+  });
+}
+
+function enableRowDrag(li, ul){
+  const HOLD_MS = 220;
+  const MOVE_CANCEL_PX = 8;
+  let holdTimer = null;
+  let startX = 0, startY = 0;
+  let dragging = false;
+  let pointerId = null;
+
+  function cleanup(){
+    clearTimeout(holdTimer);
+    if(dragging){
+      li.classList.remove('dragging');
+      li.style.transform = '';
+      const newIds = Array.from(ul.children).map(el => el.dataset.id);
+      selected.sort((a,b) => newIds.indexOf(a.id) - newIds.indexOf(b.id));
       saveSelected();
       renderSelected();
-    });
+    }
+    dragging = false;
+    pointerId = null;
+  }
+
+  li.addEventListener('pointerdown', (e)=>{
+    if(e.target.closest('.ctrl-btn')) return;
+    if(e.pointerType === 'mouse' && e.button !== 0) return;
+    pointerId = e.pointerId;
+    startX = e.clientX; startY = e.clientY;
+    dragging = false;
+    holdTimer = setTimeout(()=>{
+      dragging = true;
+      try{ li.setPointerCapture(pointerId); }catch(err){}
+      li.classList.add('dragging');
+    }, HOLD_MS);
   });
+
+  li.addEventListener('pointermove', (e)=>{
+    if(pointerId === null) return;
+    if(!dragging){
+      const dx = Math.abs(e.clientX - startX), dy = Math.abs(e.clientY - startY);
+      if(dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) clearTimeout(holdTimer);
+      return;
+    }
+    e.preventDefault();
+    const dy = e.clientY - startY;
+    li.style.transform = `translateY(${dy}px)`;
+    const overEl = document.elementFromPoint(e.clientX, e.clientY);
+    const overLi = overEl ? overEl.closest('.sel-item') : null;
+    if(overLi && overLi !== li && overLi.parentElement === ul){
+      const r = overLi.getBoundingClientRect();
+      const mid = r.top + r.height/2;
+      if(e.clientY < mid) ul.insertBefore(li, overLi);
+      else ul.insertBefore(li, overLi.nextSibling);
+      startY = e.clientY;
+      li.style.transform = 'translateY(0px)';
+    }
+  });
+
+  li.addEventListener('pointerup', (e)=>{
+    try{ if(pointerId !== null) li.releasePointerCapture(pointerId); }catch(err){}
+    cleanup();
+  });
+  li.addEventListener('pointercancel', cleanup);
 }
 
 function updateStats(){
@@ -646,12 +721,26 @@ document.getElementById('excel-upload').addEventListener('change', (e) => {
 });
 
 
-document.getElementById('jump-selected').addEventListener('click', () => {
-  document.getElementById('mySidebar').scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
-document.getElementById('jump-add').addEventListener('click', () => {
-  document.getElementById('addSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
+function showTab(tab){
+  const tabAdd = document.getElementById('tab-add');
+  const tabSelected = document.getElementById('mySidebar');
+  const btnAdd = document.getElementById('tab-btn-add');
+  const btnSelected = document.getElementById('tab-btn-selected');
+  if(tab === 'selected'){
+    tabAdd.classList.remove('active');
+    tabSelected.classList.add('active');
+    btnSelected.classList.add('primary');
+    btnAdd.classList.remove('primary');
+  } else {
+    tabAdd.classList.add('active');
+    tabSelected.classList.remove('active');
+    btnAdd.classList.add('primary');
+    btnSelected.classList.remove('primary');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.getElementById('tab-btn-selected').addEventListener('click', () => showTab('selected'));
+document.getElementById('tab-btn-add').addEventListener('click', () => showTab('add'));
 </script>
 </body>
 </html>
