@@ -208,20 +208,18 @@ input[type="text"]:focus, select:focus{
 .sel-empty{ padding:34px 14px; text-align:center; color:var(--muted); font-size:13px; }
 .sel-item{
   background:#fbfaf6; border:1px solid var(--line); border-radius:12px;
-  padding:10px 8px 10px 8px; display:flex; align-items:flex-start; gap:2px;
-  position:relative; user-select:none; -webkit-user-select:none;
+  padding:10px; display:flex; align-items:stretch; gap:8px;
+  position:relative;
 }
-.sel-item.dragging{
-  opacity:.9; box-shadow:0 10px 26px -8px rgba(18,35,64,.4); z-index:20; background:#fff;
+.sel-updown{ display:flex; flex-direction:column; gap:6px; flex:none; align-self:center; }
+.ctrl-btn-big{
+  border:none; background:#eef1f7; color:var(--navy); cursor:pointer;
+  width:34px; height:34px; border-radius:8px; font-size:16px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .12s;
 }
-.drag-handle{
-  flex:none; width:34px; align-self:stretch; display:flex; align-items:center; justify-content:center;
-  color:var(--muted); font-size:19px; cursor:grab; letter-spacing:-2px;
-  touch-action:none; -webkit-user-select:none; user-select:none;
-  margin:-10px 0 -10px -8px; border-radius:12px 0 0 12px;
-}
-.drag-handle:active{ background:#eef1f7; }
-.sel-item.dragging .drag-handle{ cursor:grabbing; color:var(--gold); background:#f5efe3; }
+.ctrl-btn-big:hover{ background:#dfe4ee; }
+.ctrl-btn-big:disabled{ opacity:.3; cursor:not-allowed; }
 .sel-rank{
   flex:none; width:24px; height:24px; border-radius:50%;
   background:var(--navy); color:#fff; font-size:12px; font-weight:800;
@@ -231,16 +229,40 @@ input[type="text"]:focus, select:focus{
 .sel-uni{ font-size:13px; font-weight:700; color:var(--ink); line-height:1.45; }
 .sel-field{ font-size:11.5px; color:var(--muted); margin-top:2px; line-height:1.5;}
 .sel-meta{ display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
-.sel-controls{ display:flex; flex-direction:column; gap:4px; flex:none; }
+.sel-controls{ display:flex; flex-direction:column; gap:6px; flex:none; align-items:center; justify-content:flex-start; }
 .ctrl-btn{
   border:none; background:#eef1f7; color:var(--navy); cursor:pointer;
-  width:24px; height:22px; border-radius:6px; font-size:12px; display:flex; align-items:center; justify-content:center;
+  width:26px; height:24px; border-radius:6px; font-size:12px; display:flex; align-items:center; justify-content:center;
   transition:background .12s;
 }
 .ctrl-btn:hover{ background:#dfe4ee; }
-.ctrl-btn.remove{ background:#fbe9e9; color:var(--r-nonprofit); }
+.ctrl-btn.remove{ background:#fbe9e9; color:var(--r-nonprofit, #a13e3e); }
 .ctrl-btn.remove:hover{ background:#f6d3d3; }
+.ctrl-btn.jump{ background:#eef1f7; color:var(--navy); font-size:14px; }
+.ctrl-btn.jump:hover{ background:#dfe4ee; }
 .ctrl-btn:disabled{ opacity:.3; cursor:not-allowed; }
+
+/* jump-to-position modal */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(18,35,64,.45); display:none;
+  align-items:center; justify-content:center; z-index:100; padding:16px;
+}
+.modal-overlay.open{ display:flex; }
+.modal-box{
+  background:#fff; border-radius:14px; padding:20px; width:100%; max-width:320px;
+  box-shadow:0 20px 50px -12px rgba(18,35,64,.4);
+}
+.modal-box h4{ margin:0 0 12px; font-size:15px; color:var(--navy); }
+.modal-box input{
+  width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid var(--line);
+  border-radius:10px; font-size:14px; font-family:inherit; text-align:center;
+}
+.modal-actions{ display:flex; gap:8px; margin-top:14px; }
+.modal-actions button{
+  flex:1; font-family:inherit; cursor:pointer; border-radius:10px; padding:9px 10px;
+  font-size:13px; font-weight:700; border:1px solid var(--line); background:#fff; color:var(--navy);
+}
+.modal-actions button.primary{ background:var(--navy); color:#fff; border-color:var(--navy); }
 
 .sidebar-foot{
   padding:14px 20px 18px; border-top:1px solid var(--line);
@@ -353,6 +375,17 @@ footer.page-foot{
       <button class="btn-secondary danger" id="btn-clear">پاک‌کردن همه</button>
     </div>
   </aside>
+</div>
+
+<div class="modal-overlay" id="jumpModal">
+  <div class="modal-box">
+    <h4>جابه‌جایی به ردیف شماره</h4>
+    <input type="number" id="jumpInput" min="1" inputmode="numeric">
+    <div class="modal-actions">
+      <button type="button" id="jumpCancel">انصراف</button>
+      <button type="button" class="primary" id="jumpConfirm">تأیید</button>
+    </div>
+  </div>
 </div>
 
 <footer class="page-foot">این ابزار صرفاً یک دستیار مرتب‌سازی محلی است؛ داده‌ها از دفترچه انتخاب رشته کارشناسی‌ارشد ۱۴۰۵ استخراج شده‌اند. لیست شما فقط در همین مرورگر ذخیره می‌شود.</footer>
@@ -497,7 +530,10 @@ function renderSelected(){
     li.className = 'sel-item';
     li.dataset.id = row.id;
     li.innerHTML = `
-      <div class="drag-handle" title="جابه‌جایی">⠿</div>
+      <div class="sel-updown">
+        <button class="ctrl-btn-big up" title="بالا" ${i===0?'disabled':''}>▲</button>
+        <button class="ctrl-btn-big down" title="پایین" ${i===selected.length-1?'disabled':''}>▼</button>
+      </div>
       <div class="sel-rank">${i+1}</div>
       <div class="sel-body">
         <div class="sel-uni">${row.uni}</div>
@@ -508,74 +544,53 @@ function renderSelected(){
         </div>
       </div>
       <div class="sel-controls">
-        <button class="ctrl-btn up" title="بالا" ${i===0?'disabled':''}>▲</button>
-        <button class="ctrl-btn down" title="پایین" ${i===selected.length-1?'disabled':''}>▼</button>
         <button class="ctrl-btn remove" title="حذف">✕</button>
+        <button class="ctrl-btn jump" title="تغییر شماره ردیف">#</button>
       </div>`;
     ul.appendChild(li);
 
     li.querySelector('.up').addEventListener('click', ()=>moveSelected(row.id,-1));
     li.querySelector('.down').addEventListener('click', ()=>moveSelected(row.id,1));
     li.querySelector('.remove').addEventListener('click', ()=>removeFromSelected(row.id));
-
-    enableRowDrag(li, ul);
+    li.querySelector('.jump').addEventListener('click', ()=>openJumpModal(row.id, i+1));
   });
 }
 
-function enableRowDrag(li, ul){
-  const handle = li.querySelector('.drag-handle');
-  let startY = 0;
-  let dragging = false;
-  let pointerId = null;
-
-  function cleanup(){
-    if(dragging){
-      li.classList.remove('dragging');
-      li.style.transform = '';
-      const newIds = Array.from(ul.children).map(el => el.dataset.id);
-      selected.sort((a,b) => newIds.indexOf(a.id) - newIds.indexOf(b.id));
-      saveSelected();
-      renderSelected();
-    }
-    dragging = false;
-    pointerId = null;
-  }
-
-  handle.addEventListener('pointerdown', (e)=>{
-    if(e.pointerType === 'mouse' && e.button !== 0) return;
-    e.preventDefault();
-    pointerId = e.pointerId;
-    startY = e.clientY;
-    dragging = true;
-    try{ handle.setPointerCapture(pointerId); }catch(err){}
-    li.classList.add('dragging');
-  });
-
-  handle.addEventListener('pointermove', (e)=>{
-    if(!dragging || e.pointerId !== pointerId) return;
-    e.preventDefault();
-    const dy = e.clientY - startY;
-    li.style.transform = `translateY(${dy}px)`;
-    const overEl = document.elementFromPoint(e.clientX, e.clientY);
-    const overLi = overEl ? overEl.closest('.sel-item') : null;
-    if(overLi && overLi !== li && overLi.parentElement === ul){
-      const r = overLi.getBoundingClientRect();
-      const mid = r.top + r.height/2;
-      if(e.clientY < mid) ul.insertBefore(li, overLi);
-      else ul.insertBefore(li, overLi.nextSibling);
-      startY = e.clientY;
-      li.style.transform = 'translateY(0px)';
-    }
-  });
-
-  handle.addEventListener('pointerup', (e)=>{
-    if(pointerId !== null){
-      try{ handle.releasePointerCapture(pointerId); }catch(err){}
-    }
-    cleanup();
-  });
-  handle.addEventListener('pointercancel', cleanup);
+let jumpTargetId = null;
+function openJumpModal(id, currentPos){
+  jumpTargetId = id;
+  const modal = document.getElementById('jumpModal');
+  const input = document.getElementById('jumpInput');
+  input.value = currentPos;
+  input.min = 1;
+  input.max = selected.length;
+  modal.classList.add('open');
+  setTimeout(()=>{ input.focus(); input.select(); }, 0);
 }
+function closeJumpModal(){
+  document.getElementById('jumpModal').classList.remove('open');
+  jumpTargetId = null;
+}
+function moveToPosition(id, newPos){
+  const idx = selected.findIndex(r=>r.id===id);
+  if(idx<0 || isNaN(newPos)) return;
+  let target = Math.round(newPos)-1;
+  target = Math.max(0, Math.min(selected.length-1, target));
+  const [item] = selected.splice(idx,1);
+  selected.splice(target,0,item);
+  saveSelected();
+  renderSelected();
+}
+document.getElementById('jumpCancel').addEventListener('click', closeJumpModal);
+document.getElementById('jumpModal').addEventListener('click', (e)=>{ if(e.target.id==='jumpModal') closeJumpModal(); });
+document.getElementById('jumpConfirm').addEventListener('click', ()=>{
+  const val = parseInt(document.getElementById('jumpInput').value, 10);
+  if(jumpTargetId!==null && !isNaN(val)) moveToPosition(jumpTargetId, val);
+  closeJumpModal();
+});
+document.getElementById('jumpInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter'){ e.preventDefault(); document.getElementById('jumpConfirm').click(); }
+});
 
 function updateStats(){
   document.getElementById('stat-total').textContent = DATA.length.toLocaleString('fa-IR');
