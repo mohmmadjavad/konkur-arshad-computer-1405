@@ -80,6 +80,19 @@ h1{ margin:0; font-size:22px; font-weight:700; letter-spacing:.2px; }
 }
 .hero-line span.acc{ color: var(--gold-light); }
 
+.nav-jump-row{ margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; }
+.nav-jump-btn{
+  font-family:inherit; cursor:pointer; border:1px solid transparent; border-radius:999px;
+  padding:10px 20px; font-size:13px; font-weight:700; color:#1a2440;
+  background: linear-gradient(160deg, var(--gold-light), var(--gold));
+  transition:transform .12s, box-shadow .12s; white-space:nowrap;
+}
+.nav-jump-btn:hover{ transform:translateY(-1px); }
+.nav-jump-btn--outline{
+  background:transparent; color:#fff; border-color:rgba(255,255,255,.4);
+}
+@media print{ .nav-jump-row{ display:none !important; } }
+
 /* ---------- LAYOUT ---------- */
 .layout{
   max-width:1400px; margin:0 auto; padding:22px 28px 60px;
@@ -87,32 +100,7 @@ h1{ margin:0; font-size:22px; font-weight:700; letter-spacing:.2px; }
 }
 @media (max-width: 1000px){
   .layout{ grid-template-columns: 1fr; }
-  .sidebar{ order:-1; margin-bottom:4px; }
 }
-
-/* ---------- QUICK JUMP BAR ---------- */
-.quick-jump{
-  position: sticky; top:0; z-index: 60;
-  background: var(--card); border-bottom:1px solid var(--line);
-  padding:10px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;
-  box-shadow: var(--shadow);
-}
-.quick-jump-text{ font-size:13px; color:var(--muted); }
-.quick-jump-text b{ color:var(--navy); font-weight:800; font-variant-numeric: tabular-nums; }
-.quick-jump-btn{
-  font-family:inherit; cursor:pointer; border:none; border-radius:999px; flex:none;
-  padding:8px 16px; font-size:12.5px; font-weight:700; color:#fff;
-  background: linear-gradient(160deg, var(--gold-light), var(--gold));
-  white-space:nowrap;
-  transition:transform .12s, box-shadow .12s;
-}
-.quick-jump-btn:hover{ transform:translateY(-1px); }
-@keyframes sidebarFlash{
-  0%{ box-shadow:0 0 0 0 rgba(184,134,63,.55); }
-  100%{ box-shadow:0 0 0 14px rgba(184,134,63,0); }
-}
-.sidebar.flash{ animation: sidebarFlash 0.9s ease-out; border-color:var(--gold); }
-@media print{ .quick-jump{ display:none !important; } }
 
 /* ---------- FILTER BAR ---------- */
 .panel{
@@ -286,17 +274,16 @@ footer.page-foot{
     <div class="hero-line">
       <h2>رشته‌ها را جست‌وجو کن، به <span class="acc">لیست انتخابی</span> اضافه کن، و ترتیب اولویتت را بچین.</h2>
     </div>
+    <div class="nav-jump-row">
+      <button class="nav-jump-btn" id="jump-selected" type="button">📋 رشته‌های انتخابی من</button>
+      <button class="nav-jump-btn nav-jump-btn--outline" id="jump-add" type="button">➕ افزودن رشته</button>
+    </div>
   </div>
 </header>
 
-<div class="quick-jump" id="quick-jump">
-  <div class="quick-jump-text"><b id="qj-count">0</b> رشته در لیست انتخابی شما</div>
-  <button class="quick-jump-btn" id="qj-btn" type="button">مشاهده لیست من ↓</button>
-</div>
-
 <div class="layout">
   <main>
-    <div class="panel filters">
+    <div class="panel filters" id="addSection">
       <div class="filters-grid">
         <div>
           <p class="field-label">جست‌وجو در دانشگاه، رشته، گرایش یا کد</p>
@@ -471,8 +458,6 @@ function renderSelected(){
   const ul = document.getElementById('selected-list');
   document.getElementById('sidebar-count').textContent = selected.length;
   document.getElementById('stat-selected').textContent = selected.length.toLocaleString('fa-IR');
-  const qjCount = document.getElementById('qj-count');
-  if(qjCount) qjCount.textContent = selected.length.toLocaleString('fa-IR');
 
   if(selected.length===0){
     ul.innerHTML = '<div class="sel-empty">هنوز رشته‌ای اضافه نکرده‌اید.<br>از لیست سمت راست دکمه «افزودن» را بزنید.</div>';
@@ -669,14 +654,11 @@ document.getElementById('excel-upload').addEventListener('change', (e) => {
 });
 
 
-document.getElementById('qj-btn').addEventListener('click', () => {
-  const el = document.getElementById('mySidebar');
-  if(!el) return;
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  el.classList.remove('flash');
-  void el.offsetWidth;
-  el.classList.add('flash');
-  setTimeout(() => el.classList.remove('flash'), 900);
+document.getElementById('jump-selected').addEventListener('click', () => {
+  document.getElementById('mySidebar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+document.getElementById('jump-add').addEventListener('click', () => {
+  document.getElementById('addSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 </script>
 </body>
