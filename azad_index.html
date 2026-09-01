@@ -206,17 +206,20 @@ input[type="text"]:focus, select:focus{
 .sel-empty{ padding:34px 14px; text-align:center; color:var(--muted); font-size:13px; }
 .sel-item{
   background:#fbfaf6; border:1px solid var(--line); border-radius:12px;
-  padding:10px 10px 10px 8px; display:flex; align-items:flex-start; gap:6px;
-  position:relative; touch-action:pan-y; user-select:none; -webkit-user-select:none;
+  padding:10px 8px 10px 8px; display:flex; align-items:flex-start; gap:2px;
+  position:relative; user-select:none; -webkit-user-select:none;
 }
 .sel-item.dragging{
-  opacity:.85; box-shadow:0 10px 26px -8px rgba(18,35,64,.4); z-index:20; background:#fff;
+  opacity:.9; box-shadow:0 10px 26px -8px rgba(18,35,64,.4); z-index:20; background:#fff;
 }
 .drag-handle{
-  flex:none; width:18px; align-self:stretch; display:flex; align-items:center; justify-content:center;
-  color:var(--muted); font-size:15px; cursor:grab; letter-spacing:-2px;
+  flex:none; width:34px; align-self:stretch; display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:19px; cursor:grab; letter-spacing:-2px;
+  touch-action:none; -webkit-user-select:none; user-select:none;
+  margin:-10px 0 -10px -8px; border-radius:12px 0 0 12px;
 }
-.sel-item.dragging .drag-handle{ cursor:grabbing; color:var(--gold); }
+.drag-handle:active{ background:#eef1f7; }
+.sel-item.dragging .drag-handle{ cursor:grabbing; color:var(--gold); background:#f5efe3; }
 .sel-rank{
   flex:none; width:24px; height:24px; border-radius:50%;
   background:var(--navy); color:#fff; font-size:12px; font-weight:800;
@@ -512,15 +515,12 @@ function renderSelected(){
 }
 
 function enableRowDrag(li, ul){
-  const HOLD_MS = 220;
-  const MOVE_CANCEL_PX = 8;
-  let holdTimer = null;
-  let startX = 0, startY = 0;
+  const handle = li.querySelector('.drag-handle');
+  let startY = 0;
   let dragging = false;
   let pointerId = null;
 
   function cleanup(){
-    clearTimeout(holdTimer);
     if(dragging){
       li.classList.remove('dragging');
       li.style.transform = '';
@@ -533,214 +533,7 @@ function enableRowDrag(li, ul){
     pointerId = null;
   }
 
-  li.addEventListener('pointerdown', (e)=>{
-    if(e.target.closest('.ctrl-btn')) return;
+  handle.addEventListener('pointerdown', (e)=>{
     if(e.pointerType === 'mouse' && e.button !== 0) return;
-    pointerId = e.pointerId;
-    startX = e.clientX; startY = e.clientY;
-    dragging = false;
-    holdTimer = setTimeout(()=>{
-      dragging = true;
-      try{ li.setPointerCapture(pointerId); }catch(err){}
-      li.classList.add('dragging');
-    }, HOLD_MS);
-  });
-
-  li.addEventListener('pointermove', (e)=>{
-    if(pointerId === null) return;
-    if(!dragging){
-      const dx = Math.abs(e.clientX - startX), dy = Math.abs(e.clientY - startY);
-      if(dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) clearTimeout(holdTimer);
-      return;
-    }
     e.preventDefault();
-    const dy = e.clientY - startY;
-    li.style.transform = `translateY(${dy}px)`;
-    const overEl = document.elementFromPoint(e.clientX, e.clientY);
-    const overLi = overEl ? overEl.closest('.sel-item') : null;
-    if(overLi && overLi !== li && overLi.parentElement === ul){
-      const r = overLi.getBoundingClientRect();
-      const mid = r.top + r.height/2;
-      if(e.clientY < mid) ul.insertBefore(li, overLi);
-      else ul.insertBefore(li, overLi.nextSibling);
-      startY = e.clientY;
-      li.style.transform = 'translateY(0px)';
-    }
-  });
-
-  li.addEventListener('pointerup', (e)=>{
-    try{ if(pointerId !== null) li.releasePointerCapture(pointerId); }catch(err){}
-    cleanup();
-  });
-  li.addEventListener('pointercancel', cleanup);
-}
-
-function updateStats(){
-  document.getElementById('stat-total').textContent = DATA.length.toLocaleString('fa-IR');
-  const unis = new Set(DATA.map(d=>d.uni));
-  document.getElementById('stat-uni').textContent = unis.size.toLocaleString('fa-IR');
-}
-
-function buildListText(){
-  if(selected.length===0) return "لیست انتخابی خالی است.";
-  let out = "لیست انتخابی رشته - کارشناسی‌ارشد دانشگاه آزاد ۱۴۰۵\n";
-  out += "====================================\n\n";
-  selected.forEach((r,i)=>{
-    out += `${i+1}) کد ${r.id} - ${r.uni}\n   ${r.field} (${r.type}) - ظرفیت ${r.cap}${r.note? " - "+r.note:""}\n\n`;
-  });
-  return out;
-}
-
-document.getElementById('search').addEventListener('input', (e)=>{
-  state.search = e.target.value.trim();
-  renderCatalog();
-});
-document.getElementById('filter-cat').addEventListener('change', (e)=>{
-  state.cat = e.target.value; renderCatalog();
-});
-document.getElementById('filter-type').addEventListener('change', (e)=>{
-  state.type = e.target.value; renderCatalog();
-});
-document.getElementById('reset-filters').addEventListener('click', ()=>{
-  state.search=""; state.cat=""; state.type="";
-  document.getElementById('search').value="";
-  document.getElementById('filter-cat').value="";
-  document.getElementById('filter-type').value="";
-  renderCatalog();
-});
-document.getElementById('btn-clear').addEventListener('click', ()=>{
-  if(selected.length===0) return;
-  if(!confirm('همه رشته‌های انتخابی حذف شوند؟')) return;
-  selected = []; selectedIds.clear(); saveSelected();
-  renderCatalog(); renderSelected(); updateStats();
-});
-document.getElementById('btn-copy').addEventListener('click', ()=>{
-  const text = buildListText();
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn = document.getElementById('btn-copy');
-    const old = btn.textContent; btn.textContent = "کپی شد ✓";
-    setTimeout(()=>btn.textContent=old, 1400);
-  });
-});
-document.getElementById('btn-download').addEventListener('click', ()=>{
-  const text = buildListText();
-  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'لیست-انتخاب-رشته-1405.txt';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-
-function init(){
-  try{
-    populateFilters();
-    updateStats();
-    renderCatalog();
-    renderSelected();
-  }catch(err){
-    document.getElementById('catalog').innerHTML =
-      '<div class="panel empty-state" style="color:#a13e3e;">خطایی رخ داد: '+ (err && err.message ? err.message : err) +'</div>';
-    console.error(err);
-  }
-}
-if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-
-
-// ---------- EXCEL EXPORT / IMPORT ----------
-function buildExcelRows(){
-  return selected.map((r, i) => ({
-    "ردیف": i + 1,
-    "کد": r.id,
-    "دانشگاه / محل تحصیل": r.uni,
-    "رشته - گرایش": r.field,
-    "گروه رشته": r.cat,
-    "نوع دوره": r.type,
-    "ظرفیت": r.cap,
-    "توضیحات": r.note || ""
-  }));
-}
-
-document.getElementById('btn-excel-export').addEventListener('click', () => {
-  if (selected.length === 0) { alert('لیست انتخابی خالی است.'); return; }
-  if (typeof XLSX === 'undefined') { alert('کتابخانه اکسل بارگذاری نشد. اتصال اینترنت را بررسی کنید.'); return; }
-  const rows = buildExcelRows();
-  const ws = XLSX.utils.json_to_sheet(rows);
-  ws['!cols'] = [
-    { wch: 6 }, { wch: 14 }, { wch: 42 }, { wch: 42 },
-    { wch: 26 }, { wch: 16 }, { wch: 8 }, { wch: 40 }
-  ];
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'لیست انتخابی');
-  XLSX.writeFile(wb, 'لیست-انتخاب-رشته-1405.xlsx');
-});
-
-document.getElementById('excel-upload').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (typeof XLSX === 'undefined') { alert('کتابخانه اکسل بارگذاری نشد. اتصال اینترنت را بررسی کنید.'); e.target.value = ''; return; }
-  const reader = new FileReader();
-  reader.onload = (evt) => {
-    try {
-      const wb = XLSX.read(evt.target.result, { type: 'array' });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-      let added = 0, notFound = 0, duplicate = 0;
-      rows.forEach(row => {
-        const rawCode = row['کد'] ?? row['کد رشته محل'] ?? row['Code'] ?? row['code'] ?? '';
-        const code = String(rawCode).trim();
-        if (!code) return;
-        if (selectedIds.has(code)) { duplicate++; return; }
-        const match = DATA.find(d => d.id === code);
-        if (match) {
-          selected.push(match);
-          selectedIds.add(code);
-          added++;
-        } else {
-          notFound++;
-        }
-      });
-      saveSelected();
-      renderCatalog();
-      renderSelected();
-      updateStats();
-      let msg = `${added} ردیف از اکسل به لیست اضافه شد.`;
-      if (duplicate) msg += `\n${duplicate} مورد از قبل در لیست بود.`;
-      if (notFound) msg += `\n${notFound} کد در این دیتاست پیدا نشد (شاید مربوط به نسخهٔ دیگر فایل باشد).`;
-      alert(msg);
-    } catch (err) {
-      alert('خطا در خواندن فایل اکسل: ' + (err && err.message ? err.message : err));
-    }
-    e.target.value = '';
-  };
-  reader.readAsArrayBuffer(file);
-});
-
-
-function showTab(tab){
-  const tabAdd = document.getElementById('tab-add');
-  const tabSelected = document.getElementById('mySidebar');
-  const btnAdd = document.getElementById('tab-btn-add');
-  const btnSelected = document.getElementById('tab-btn-selected');
-  if(tab === 'selected'){
-    tabAdd.classList.remove('active');
-    tabSelected.classList.add('active');
-    btnSelected.classList.add('primary');
-    btnAdd.classList.remove('primary');
-  } else {
-    tabAdd.classList.add('active');
-    tabSelected.classList.remove('active');
-    btnAdd.classList.add('primary');
-    btnSelected.classList.remove('primary');
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-document.getElementById('tab-btn-selected').addEventListener('click', () => showTab('selected'));
-document.getElementById('tab-btn-add').addEventListener('click', () => showTab('add'));
-</script>
-</body>
-</html>
+    pointerId =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           

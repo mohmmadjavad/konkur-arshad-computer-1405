@@ -208,17 +208,20 @@ input[type="text"]:focus, select:focus{
 .sel-empty{ padding:34px 14px; text-align:center; color:var(--muted); font-size:13px; }
 .sel-item{
   background:#fbfaf6; border:1px solid var(--line); border-radius:12px;
-  padding:10px 10px 10px 8px; display:flex; align-items:flex-start; gap:6px;
-  position:relative; touch-action:pan-y; user-select:none; -webkit-user-select:none;
+  padding:10px 8px 10px 8px; display:flex; align-items:flex-start; gap:2px;
+  position:relative; user-select:none; -webkit-user-select:none;
 }
 .sel-item.dragging{
-  opacity:.85; box-shadow:0 10px 26px -8px rgba(18,35,64,.4); z-index:20; background:#fff;
+  opacity:.9; box-shadow:0 10px 26px -8px rgba(18,35,64,.4); z-index:20; background:#fff;
 }
 .drag-handle{
-  flex:none; width:18px; align-self:stretch; display:flex; align-items:center; justify-content:center;
-  color:var(--muted); font-size:15px; cursor:grab; letter-spacing:-2px;
+  flex:none; width:34px; align-self:stretch; display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:19px; cursor:grab; letter-spacing:-2px;
+  touch-action:none; -webkit-user-select:none; user-select:none;
+  margin:-10px 0 -10px -8px; border-radius:12px 0 0 12px;
 }
-.sel-item.dragging .drag-handle{ cursor:grabbing; color:var(--gold); }
+.drag-handle:active{ background:#eef1f7; }
+.sel-item.dragging .drag-handle{ cursor:grabbing; color:var(--gold); background:#f5efe3; }
 .sel-rank{
   flex:none; width:24px; height:24px; border-radius:50%;
   background:var(--navy); color:#fff; font-size:12px; font-weight:800;
@@ -520,15 +523,12 @@ function renderSelected(){
 }
 
 function enableRowDrag(li, ul){
-  const HOLD_MS = 220;
-  const MOVE_CANCEL_PX = 8;
-  let holdTimer = null;
-  let startX = 0, startY = 0;
+  const handle = li.querySelector('.drag-handle');
+  let startY = 0;
   let dragging = false;
   let pointerId = null;
 
   function cleanup(){
-    clearTimeout(holdTimer);
     if(dragging){
       li.classList.remove('dragging');
       li.style.transform = '';
@@ -541,26 +541,18 @@ function enableRowDrag(li, ul){
     pointerId = null;
   }
 
-  li.addEventListener('pointerdown', (e)=>{
-    if(e.target.closest('.ctrl-btn')) return;
+  handle.addEventListener('pointerdown', (e)=>{
     if(e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
     pointerId = e.pointerId;
-    startX = e.clientX; startY = e.clientY;
-    dragging = false;
-    holdTimer = setTimeout(()=>{
-      dragging = true;
-      try{ li.setPointerCapture(pointerId); }catch(err){}
-      li.classList.add('dragging');
-    }, HOLD_MS);
+    startY = e.clientY;
+    dragging = true;
+    try{ handle.setPointerCapture(pointerId); }catch(err){}
+    li.classList.add('dragging');
   });
 
-  li.addEventListener('pointermove', (e)=>{
-    if(pointerId === null) return;
-    if(!dragging){
-      const dx = Math.abs(e.clientX - startX), dy = Math.abs(e.clientY - startY);
-      if(dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) clearTimeout(holdTimer);
-      return;
-    }
+  handle.addEventListener('pointermove', (e)=>{
+    if(!dragging || e.pointerId !== pointerId) return;
     e.preventDefault();
     const dy = e.clientY - startY;
     li.style.transform = `translateY(${dy}px)`;
@@ -576,11 +568,13 @@ function enableRowDrag(li, ul){
     }
   });
 
-  li.addEventListener('pointerup', (e)=>{
-    try{ if(pointerId !== null) li.releasePointerCapture(pointerId); }catch(err){}
+  handle.addEventListener('pointerup', (e)=>{
+    if(pointerId !== null){
+      try{ handle.releasePointerCapture(pointerId); }catch(err){}
+    }
     cleanup();
   });
-  li.addEventListener('pointercancel', cleanup);
+  handle.addEventListener('pointercancel', cleanup);
 }
 
 function updateStats(){
